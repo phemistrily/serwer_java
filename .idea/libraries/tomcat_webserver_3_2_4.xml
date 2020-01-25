@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="tomcat:webserver:3.2.4" type="repository">
+    <properties maven-id="tomcat:webserver:3.2.4" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/tomcat/webserver/3.2.4/webserver-3.2.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
