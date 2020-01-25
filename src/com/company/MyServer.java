@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -20,24 +21,17 @@ public class MyServer {
 
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println(socket);
 
                 System.out.println("New client connected");
 
                 OutputStream output = socket.getOutputStream();
                 PrintWriter writer = new PrintWriter(output, true);
-
+                System.out.println(output);
 
                 System.out.println(socket);
                 this.waitingList.add(socket.getPort());
                 System.out.println(this.waitingList.size());
-                if(this.waitingList.size() < 2)
-                {
-                    writer.println(0);
-                }
-                else
-                {
-                    writer.println(1);
-                }
 
                 writer.println(new Date().toString());
                 writer.println(socket.getPort());
