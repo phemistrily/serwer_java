@@ -1,7 +1,6 @@
 package game;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -11,7 +10,6 @@ public class Game implements Runnable {
     private Player activePlayer;
     private boolean player1Ready = false;
     private boolean player2Ready = false;
-
     private String[] tilesMap = {
             "img1", "img2", "img3", "img4", "img5",
             "img7", "img10", "img6", "img2", "img8",
@@ -32,36 +30,6 @@ public class Game implements Runnable {
         }
     }
 
-    private void start() throws IOException {
-        // Game start
-        this.tilesMap = shuffleArray(this.tilesMap);
-        broadcast("Game start!");
-        int moves = 0;
-        String move;
-        Player oponent = activePlayer == player1 ? player2 : player1;
-        broadcast("Active player: " + activePlayer.uuid);
-        broadcast("Oponent: " + oponent.uuid);
-        player1.consumeMessage("gameStart");
-        player2.consumeMessage("gameStart");
-        if(player1.uuid == activePlayer.uuid)
-        {
-            player1.consumeMessage("true");
-            player2.consumeMessage("false");
-        }
-        else
-        {
-            player1.consumeMessage("false");
-            player2.consumeMessage("true");
-        }
-        for (int i = 0; i < tilesMap.length;i++) {
-            player1.consumeMessage(tilesMap[i]);
-            player2.consumeMessage(tilesMap[i]);
-        }
-        player1.consumeMessage("endTilesMap");
-        player2.consumeMessage("endTilesMap");
-//
-    }
-
     private String[] shuffleArray(String[] tilesMap) {
         Random rnd = ThreadLocalRandom.current();
         Integer legnthArray = tilesMap.length - 1;
@@ -74,6 +42,26 @@ public class Game implements Runnable {
             tilesMap[i] = a;
         }
         return tilesMap;
+    }
+
+    private void start() throws IOException {
+        // Game start
+        broadcast("Game start!");
+        this.tilesMap = shuffleArray(this.tilesMap);
+        int moves = 0;
+        Player.GameMoveDto move;
+        Player oponent = activePlayer == player1 ? player2 : player1;
+        broadcast("Active player: " + activePlayer.uuid);
+        broadcast("Oponent: " + oponent.uuid);
+//        broadcast();
+//        while (moves < 10) {
+//            System.out.println("Move: #" + moves);
+//            move = activePlayer.getMove();
+//            broadcast("Player [" + activePlayer.uuid + "] did [" + move + "]");
+//            move = oponent.getMove();
+//            broadcast("Player [" + oponent.uuid + "] did [" + move + "]");
+//            moves++;
+//        }
     }
 
     // One of the  players sent  message, pass it to the other player

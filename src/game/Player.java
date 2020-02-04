@@ -1,10 +1,17 @@
 package game;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.UUID;
 
+import com.google.gson.Gson;
+
 public class Player implements Runnable {
+    private static final Gson GSON = new Gson();
+
     final UUID uuid;
     final Socket socket;
     Game currentGame;
@@ -30,8 +37,7 @@ public class Player implements Runnable {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
         output.println("WELCOME " + uuid + "\n");
-        output.println("PlayerId");
-        output.println(uuid);
+
         if (currentGame != null) {
             currentGame.playerReady(this);
             currentGame.messageFromPlayer(this, "Player " + uuid + " connected" + "\n");
@@ -39,17 +45,24 @@ public class Player implements Runnable {
 
     }
 
-    public String getMove() {
+    public GameMoveDto getMove() {
         output.println("get_move");
         try {
             int receiveBufferSize = socket.getReceiveBufferSize();
             byte[] buff = new byte[receiveBufferSize];
             int read = socket.getInputStream().read(buff);
-            return new String(buff, 0, read);
+            String message = new String(buff, 0, read);
+            try {
+                return GSON.fromJson(message, GameMoveDto.class);
+            }
+            catch(Exception e) {
+                System.out.println(message);
+                return null;
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
-            return "";
+            throw new RuntimeException("game interrupted", e);
         }
     }
 
@@ -74,4 +87,36 @@ public class Player implements Runnable {
     }
 
 
+    static class GameMoveDto {
+        TileDto tile1;
+        TileDto tile2;
+
+        public GameMoveDto(TileDto tile1, TileDto tile2) {
+            this.tile1 = tile1;
+            this.tile2 = tile2;
+        }
+
+        @Override
+        public String toString() {
+            return "Tile 1: " + tile1.toString() + "\n" + "Tile 2: " + tile2.toString();
+        }
+
+        static class TileDto {
+            int idx;
+            String image;
+
+            public TileDto(int idx, String image) {
+                this.idx = idx;
+                this.image = image;
+            }
+
+            @Override
+            public String toString() {
+                return "TileDto{" +
+                        "idx=" + idx +
+                        ", image='" + image + '\'' +
+                        '}';
+            }
+        }
+    }
 }
