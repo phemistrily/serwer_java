@@ -54,14 +54,21 @@ public class Game implements Runnable {
         broadcast("Active player: " + activePlayer.uuid);
         broadcast("Oponent: " + oponent.uuid);
 //        broadcast();
-//        while (moves < 10) {
-//            System.out.println("Move: #" + moves);
-//            move = activePlayer.getMove();
-//            broadcast("Player [" + activePlayer.uuid + "] did [" + move + "]");
-//            move = oponent.getMove();
-//            broadcast("Player [" + oponent.uuid + "] did [" + move + "]");
-//            moves++;
-//        }
+        for (int i = 0; i < tilesMap.length;i++) {
+            player1.consumeMessage(tilesMap[i]);
+            player2.consumeMessage(tilesMap[i]);
+        }
+        player1.consumeMessage("endTilesMap");
+        player2.consumeMessage("endTilesMap");
+        broadcast("Game pushed");
+        while (moves < 10) {
+            System.out.println("Move: #" + moves);
+            move = player1.getMove();
+            broadcast("Player [" + activePlayer.uuid + "] did [" + move + "]");
+            move = player2.getMove();
+            broadcast("Player [" + oponent.uuid + "] did [" + move + "]");
+            moves++;
+        }
     }
 
     // One of the  players sent  message, pass it to the other player
