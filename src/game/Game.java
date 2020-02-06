@@ -49,26 +49,34 @@ public class Game implements Runnable {
         broadcast("Game start!");
         this.tilesMap = shuffleArray(this.tilesMap);
         int moves = 0;
-        Player.GameMoveDto move;
-        Player oponent = activePlayer == player1 ? player2 : player1;
+        Player opponent = activePlayer == player1 ? player2 : player1;
         broadcast("Active player: " + activePlayer.uuid);
-        broadcast("Oponent: " + oponent.uuid);
-//        broadcast();
+        broadcast("Oponent: " + opponent.uuid);
+        broadcast("Game pushed");
         for (int i = 0; i < tilesMap.length;i++) {
             player1.consumeMessage(tilesMap[i]);
             player2.consumeMessage(tilesMap[i]);
         }
         player1.consumeMessage("endTilesMap");
         player2.consumeMessage("endTilesMap");
-        broadcast("Game pushed");
-        while (moves < 10) {
-            System.out.println("Move: #" + moves);
-            move = player1.getMove();
-            broadcast("Player [" + activePlayer.uuid + "] did [" + move + "]");
-            move = player2.getMove();
-            broadcast("Player [" + oponent.uuid + "] did [" + move + "]");
-            moves++;
+        while(activePlayer.points != 0 || opponent.points != 0){
+            var move = activePlayer.getMove();
+            var opponentMove = opponent.getMove();
+
+            if(move.tile1.idx == opponentMove.tile1.idx && move.tile2.idx == opponentMove.tile2.idx){
+                opponent.success();
+                activePlayer.fail();
+            }
         }
+//        broadcast();
+//        while (moves < 10) {
+//            System.out.println("Move: #" + moves);
+//            move = activePlayer.getMove();
+//            broadcast("Player [" + activePlayer.uuid + "] did [" + move + "]");
+//            move = oponent.getMove();
+//            broadcast("Player [" + oponent.uuid + "] did [" + move + "]");
+//            moves++;
+//        }
     }
 
     // One of the  players sent  message, pass it to the other player

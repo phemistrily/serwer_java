@@ -14,6 +14,7 @@ public class Player implements Runnable {
 
     final UUID uuid;
     final Socket socket;
+    public int points = 10;
     Game currentGame;
     BufferedReader input;
     PrintWriter output;
@@ -45,25 +46,38 @@ public class Player implements Runnable {
 
     }
 
-    public GameMoveDto getMove() {
+    public GameMoveDto getMove() throws IOException {
         output.println("get_move");
-        try {
-            int receiveBufferSize = socket.getReceiveBufferSize();
-            byte[] buff = new byte[receiveBufferSize];
-            int read = socket.getInputStream().read(buff);
-            String message = new String(buff, 0, read);
+        var isSuccess = false;
+        GameMoveDto dto = null;
+        while(!isSuccess){
             try {
-                return GSON.fromJson(message, GameMoveDto.class);
+                var dtoJson = input.readLine();
+                dto = GSON.fromJson(dtoJson, GameMoveDto.class);
+                isSuccess = dto != null;
             }
-            catch(Exception e) {
-                System.out.println(message);
-                return null;
+            catch (Exception ex) {
+                isSuccess = false;
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("game interrupted", e);
-        }
+        return dto;
+//        try {
+//            int receiveBufferSize = socket.getReceiveBufferSize();
+//            byte[] buff = new byte[receiveBufferSize];
+//            int read = socket.getInputStream().read(buff);
+//            String message = new String(buff, 0, read);
+//            try {
+//                return GSON.fromJson(message, GameMoveDto.class);
+//            }
+//            catch(Exception e) {
+//                System.out.println(message);
+//                return null;
+//            }
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("game interrupted", e);
+//        }
     }
 
     public void setActiveGame(Game game) throws IOException {
@@ -86,6 +100,17 @@ public class Player implements Runnable {
         }
     }
 
+    public void success() {
+        output.println("success");
+        points++;
+    }
+
+    public void fail() {
+
+        output.println("success");
+        points--;
+    }
+
 
     static class GameMoveDto {
         TileDto tile1;
@@ -102,10 +127,10 @@ public class Player implements Runnable {
         }
 
         static class TileDto {
-            int idx;
+            String idx;
             String image;
 
-            public TileDto(int idx, String image) {
+            public TileDto(String idx, String image) {
                 this.idx = idx;
                 this.image = image;
             }
