@@ -61,12 +61,29 @@ public class Game implements Runnable {
         player2.consumeMessage("endTilesMap");
         while(activePlayer.points != 0 || opponent.points != 0){
             var move = activePlayer.getMove();
-            var opponentMove = opponent.getMove();
-
-            if(move.tile1.idx == opponentMove.tile1.idx && move.tile2.idx == opponentMove.tile2.idx){
-                opponent.success();
-                activePlayer.fail();
+            System.out.println(move);
+            if(move.tile1.idx == move.tile2.idx && move.tile1.image != move.tile2.image)
+            {
+                activePlayer.success(opponent.points);
             }
+            else
+            {
+                activePlayer.fail(opponent.points);
+            }
+            var opponentMove = opponent.getMove();
+            System.out.println(opponentMove);
+            if(opponentMove.tile1.idx == opponentMove.tile2.idx && opponentMove.tile1.image != opponentMove.tile2.image)
+            {
+                opponent.success(activePlayer.points);
+            }
+            else
+            {
+                opponent.fail(activePlayer.points);
+            }
+//            if(move.tile1.idx == opponentMove.tile1.idx && move.tile2.idx == opponentMove.tile2.idx){
+//                opponent.success();
+//                activePlayer.fail();
+//            }
         }
 //        broadcast();
 //        while (moves < 10) {

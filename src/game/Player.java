@@ -14,7 +14,7 @@ public class Player implements Runnable {
 
     final UUID uuid;
     final Socket socket;
-    public int points = 10;
+    public int points = 1000;
     Game currentGame;
     BufferedReader input;
     PrintWriter output;
@@ -100,15 +100,21 @@ public class Player implements Runnable {
         }
     }
 
-    public void success() {
+    public void success(int enemyPoints) {
+        this.points += 500;
+        output.println("successMove");
+        output.println(this.points);
+        output.println(enemyPoints);
         output.println("success");
-        points++;
+        this.points++;
     }
 
-    public void fail() {
-
+    public void fail(int enemyPoints) {
+        this.points -= 100;
+        output.println("failMove");
+        output.println(this.points);
+        output.println(enemyPoints);
         output.println("success");
-        points--;
     }
 
 
