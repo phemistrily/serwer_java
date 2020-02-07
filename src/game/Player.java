@@ -39,7 +39,8 @@ public class Player implements Runnable {
     private void setup() throws IOException {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
-        output.println("WELCOME " + uuid + "\n");
+        output.println("WELCOME");
+        output.println(uuid);
 
         if (currentGame != null) {
             currentGame.playerReady(this);
