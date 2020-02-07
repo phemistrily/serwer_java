@@ -92,12 +92,12 @@ public class Game implements Runnable {
                 activePlayer.syncTiles(removeButtonList, countRemoveButton);
                 opponent.syncTiles(removeButtonList, countRemoveButton);
                 opponent.success(activePlayer.points);
-                activePlayer.syncPoints(activePlayer.points);
+                activePlayer.syncPoints(opponent.points);
             }
             else
             {
                 opponent.fail(activePlayer.points);
-                activePlayer.syncPoints(activePlayer.points);
+                activePlayer.syncPoints(opponent.points);
             }
 //            if(move.tile1.idx == opponentMove.tile1.idx && move.tile2.idx == opponentMove.tile2.idx){
 //                opponent.success();
