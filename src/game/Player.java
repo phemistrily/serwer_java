@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -102,19 +104,42 @@ public class Player implements Runnable {
 
     public void success(int enemyPoints) {
         this.points += 500;
+        
+        System.out.println(points);
         output.println("successMove");
         output.println(this.points);
         output.println(enemyPoints);
         output.println("success");
-        this.points++;
     }
 
     public void fail(int enemyPoints) {
         this.points -= 100;
+        System.out.println(points);
         output.println("failMove");
         output.println(this.points);
         output.println(enemyPoints);
         output.println("success");
+    }
+
+    public void syncPoints(int enemyPoints) {
+        output.println("successMove");
+        output.println(this.points);
+        output.println(enemyPoints);
+    }
+
+    public void syncTiles(ArrayList<String> removeButtonList, Integer countRemoveButton) {
+        output.println("syncTiles");
+        output.println(countRemoveButton);
+        Iterator i = removeButtonList.iterator();
+        while (i.hasNext()) {
+            //System.out.println(i.next());
+            output.println(i.next());
+        }
+        output.println("endSyncTiles");
+    }
+
+    public void endGame() {
+        output.println("endgame");
     }
 
 

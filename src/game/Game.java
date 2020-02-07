@@ -1,6 +1,7 @@
 package game;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,6 +17,8 @@ public class Game implements Runnable {
             "img3", "img4", "img9", "img7", "img10",
             "img9", "img5", "img1", "img8", "img6",
     };
+    private ArrayList<String> removeButtonList = new ArrayList<String>(200);
+    private Integer countRemoveButton = 0;
 
     public Game(Player player1, Player player2) {
         try {
@@ -59,32 +62,50 @@ public class Game implements Runnable {
         }
         player1.consumeMessage("endTilesMap");
         player2.consumeMessage("endTilesMap");
-        while(activePlayer.points != 0 || opponent.points != 0){
+        while(countRemoveButton != 20){
             var move = activePlayer.getMove();
             System.out.println(move);
-            if(move.tile1.idx == move.tile2.idx && move.tile1.image != move.tile2.image)
+            if((move.tile1.idx.contains(move.tile2.idx)) && (!move.tile1.image.contains(move.tile2.image)))
             {
+                removeButtonList.add(move.tile1.image);
+                removeButtonList.add(move.tile2.image);
+                countRemoveButton +=1;
+                System.out.println(countRemoveButton);
+                activePlayer.syncTiles(removeButtonList, countRemoveButton);
+                opponent.syncTiles(removeButtonList, countRemoveButton);
                 activePlayer.success(opponent.points);
+                opponent.syncPoints(activePlayer.points);
             }
             else
             {
                 activePlayer.fail(opponent.points);
+                opponent.syncPoints(activePlayer.points);
             }
             var opponentMove = opponent.getMove();
             System.out.println(opponentMove);
-            if(opponentMove.tile1.idx == opponentMove.tile2.idx && opponentMove.tile1.image != opponentMove.tile2.image)
+            if((opponentMove.tile1.idx.contains(opponentMove.tile2.idx)) && (!opponentMove.tile1.image.contains(opponentMove.tile2.image)))
             {
+                removeButtonList.add(opponentMove.tile1.image);
+                removeButtonList.add(opponentMove.tile2.image);
+                countRemoveButton +=1;
+                System.out.println(countRemoveButton);
+                activePlayer.syncTiles(removeButtonList, countRemoveButton);
+                opponent.syncTiles(removeButtonList, countRemoveButton);
                 opponent.success(activePlayer.points);
+                activePlayer.syncPoints(activePlayer.points);
             }
             else
             {
                 opponent.fail(activePlayer.points);
+                activePlayer.syncPoints(activePlayer.points);
             }
 //            if(move.tile1.idx == opponentMove.tile1.idx && move.tile2.idx == opponentMove.tile2.idx){
 //                opponent.success();
 //                activePlayer.fail();
 //            }
         }
+        player1.endGame();
+        player2.endGame();
 //        broadcast();
 //        while (moves < 10) {
 //            System.out.println("Move: #" + moves);
