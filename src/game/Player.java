@@ -62,6 +62,8 @@ public class Player implements Runnable {
                 isSuccess = false;
             }
         }
+        var dtoJson1 = input.readLine();
+        dto = GSON.fromJson(dtoJson1, GameMoveDto.class);
         return dto;
 //        try {
 //            int receiveBufferSize = socket.getReceiveBufferSize();
@@ -118,11 +120,11 @@ public class Player implements Runnable {
         output.println("failMove");
         output.println(this.points);
         output.println(enemyPoints);
-        output.println("success");
+        output.println("fail");
     }
 
     public void syncPoints(int enemyPoints) {
-        output.println("successMove");
+        output.println("syncPoints");
         output.println(this.points);
         output.println(enemyPoints);
     }
