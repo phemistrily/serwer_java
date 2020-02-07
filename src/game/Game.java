@@ -65,11 +65,15 @@ public class Game implements Runnable {
 
         while(countRemoveButton != 20){
             System.out.println("--Początek  while: ");
-
+            System.out.println(countRemoveButton);
+            if (countRemoveButton == 20) {
+                player1.endGame();
+                player2.endGame();
+            }
             var move = activePlayer.getMove();
             System.out.println("Active player: ");
             System.out.println(move);
-            if((move.tile1.idx.contains(move.tile2.idx)) && (!move.tile1.image.contains(move.tile2.image)))
+            if((move.tile1.idx.equals(move.tile2.idx)) && (!move.tile1.image.equals(move.tile2.image)))
             {
                 removeButtonList.add(move.tile1.image);
                 removeButtonList.add(move.tile2.image);
@@ -85,11 +89,14 @@ public class Game implements Runnable {
                 activePlayer.fail(opponent.points);
                 opponent.syncPoints(activePlayer.points);
             }
-
+            if (countRemoveButton == 20) {
+                player1.endGame();
+                player2.endGame();
+            }
             var opponentMove = opponent.getMove();
             System.out.println("Opponent player: ");
             System.out.println(opponentMove);
-            if((opponentMove.tile1.idx.contains(opponentMove.tile2.idx)) && (!opponentMove.tile1.image.contains(opponentMove.tile2.image)))
+            if((opponentMove.tile1.idx.equals(opponentMove.tile2.idx)) && (!opponentMove.tile1.image.equals(opponentMove.tile2.image)))
             {
                 removeButtonList.add(opponentMove.tile1.image);
                 removeButtonList.add(opponentMove.tile2.image);

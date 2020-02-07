@@ -134,8 +134,8 @@ public class Player implements Runnable {
         output.println(countRemoveButton);
         Iterator i = removeButtonList.iterator();
         while (i.hasNext()) {
-            //System.out.println(i.next());
-            output.println(i.next());
+            String d = String.valueOf(i.next());
+            output.println(d);
         }
         output.println("endSyncTiles");
     }
