@@ -1,6 +1,7 @@
 package game;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -62,6 +63,12 @@ public class Game implements Runnable {
         }
         player1.consumeMessage("endTilesMap");
         player2.consumeMessage("endTilesMap");
+
+        Clock clock = Clock.systemDefaultZone();
+        long currentTime = clock.millis();
+        String startGameTime = Long.toString(currentTime);
+        player1.startGameTimeMessage(startGameTime);
+        player2.startGameTimeMessage(startGameTime);
 
         while(countRemoveButton != 20){
             System.out.println("--Początek  while: ");

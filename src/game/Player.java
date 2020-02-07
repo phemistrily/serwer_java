@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -104,6 +105,13 @@ public class Player implements Runnable {
         }
     }
 
+    public  void startGameTimeMessage(String startGameTime){
+        output.println("startGameTime");
+        output.println(startGameTime);
+        output.flush();
+    }
+
+
     public void success(int enemyPoints) {
         this.points += 500;
         
@@ -140,8 +148,13 @@ public class Player implements Runnable {
         output.println("endSyncTiles");
     }
 
+
     public void endGame() {
+        Clock clock = Clock.systemDefaultZone();
+        long currentTime = clock.millis();
+        String endGameTime = Long.toString(currentTime);
         output.println("endgame");
+        output.println(endGameTime);
     }
 
 
